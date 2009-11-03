@@ -1,0 +1,16 @@
+Jul 24, 2009 - 1.2.1
+ - Fix ACR122 on 64 bits architecture under GNU/Linux.
+
+Jul 22, 2009 - 1.2.0
+ - License changed from GPLv3 to LGPLv3
+ - ARYGON ADRA-USB/ADRB-USB reader support
+ - PN533 support
+ - C99 standard (all custom defined types have been renamed)
+ - Autotoolized for GNU/Linux, *BSD and MacOSX
+ - nfc tools (anticol, emulate, list, mftool, relay) are now prefixed by "nfc-"
+
+Mar 27, 2009 - 1.1.0
+ - Next generation, support for ACR122v2 and PN531 USB devices
+
+Feb 12, 2009 - 1.0.0
+ - Initial release
