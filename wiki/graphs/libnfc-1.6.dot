@@ -71,5 +71,5 @@ digraph nfc_transceive {
     USB -> PN532	[taillabel="10"];
     PN53x -> libnfc	[taillabel="11"];
 
-    label="Expected nfc_transceive() call path for libnfc-1.8.";
+    label="Expected nfc_transceive() call path for libnfc-1.6.";
 }

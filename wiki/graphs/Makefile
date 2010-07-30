@@ -1,5 +1,5 @@
 
-all: libnfc-1.5.png libnfc-1.8.png
+all: libnfc-1.3.png libnfc-1.6.png
 
 .SUFFIXES: .dot .png
 
@@ -7,4 +7,4 @@ all: libnfc-1.5.png libnfc-1.8.png
 	dot -Tpng:cairo $< > $@
 
 clean:
-	rm libnfc-1.5.png libnfc-1.8.png
+	rm libnfc-1.3.png libnfc-1.6.png
