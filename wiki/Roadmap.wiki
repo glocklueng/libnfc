@@ -11,6 +11,40 @@ ETA: september 2010
 
 The focus for 1.6 is a better abstraction of NFC devices.  As of 1.3.x, we already have concepts of drivers and chips, but the overall architecture is pn53x-centric, and while there is no plan to support any other chip at the time of writing, this could became a major issue when we will decide to do so.  It has so been decided to rework the way NFC devices are handled and provide a device agnostic and consistent API for NFC targets manipulation
 
+The following graphs represent the communication involved when sending a command to a NFC device (here a device with a PN532 connected via USB), and the dotted arows represent possible communication chanels not use in that context.  As you can see, the current architecture is a bit simple (less arrows for communication) but really confusing because some function calls cannot be done directly at the chip driver level and so the code mix direct call to device driver with indirect calss through the chip driver.
+
+http://libnfc.googlecode.com/svn/wiki/graphs/libnfc-1.3.png
+http://libnfc.googlecode.com/svn/wiki/graphs/libnfc-1.6.png
+
+=== Current call path ===
+  1. pn53x_transceive()
+  1. pn53x_usb_transceive()
+  1. usb_bulk_write() The command is send to the device
+  1. usb_bulk_read() The device sends an ACK / NACK
+  1. Depending on the status
+     1. usb_bulk_read() if the command was send successfuly to read the command result
+     1. return an error otherwise (5.2.1, 5.2.2) (*function terminates*)
+  1. return the command result
+  1. usb_bulk_write() Send an ACK to the device (not done currently)
+  1. return the command result
+
+=== Expected call path ===
+  1. pn53x_transceive()
+  1. pn53x_usb_transceive()
+  1. usb_bulk_write() The command is send to the device
+  1. usb_bulk_read() The device sends an ACK / NACK
+  1. The reply is returned to the PN53x management code
+  1. Depending on the result
+    1. A request to read the response is send to the USB interface if the command was sent successfuly
+    1. An error is returned if the command was not sent correctly (*function terminates*)
+  1. usb_bulk_read() The device sends the response
+  1. The response is returned to the PN53x management code
+  1. A request for ACK is sent to the USB interface
+  1. usb_bulk_write() Send an ACK to the device
+  1. return the command result
+
+The goal is to provide consistent and reusable interfaces, so that error management and recovery can be handled in as few places as possible: in the current implementation, each device drived does it's own error detection (if any) and a lot of code is redundant (of forgotten).  We really trust that this refactoring will help making it easier to add support for new hardware in the future.
+
 ETA: TBD
 -----------
 = libnfc-1.8 =
