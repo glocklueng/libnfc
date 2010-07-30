@@ -1,0 +1,79 @@
+digraph nfc_transceive {
+    fontname="Bitstream Vera Sans";
+    fontsize=12;
+
+    edge [fontname="Bitstream Vera Sans", fontsize=8];
+    node [fontname="Bitstream Vera Sans", fontsize=12];
+
+    subgraph {
+	node [shape=plaintext];
+	library -> chipdriver -> devicedriver -> chip;
+
+	devicedriver	[label="device driver"];
+	chipdriver	[label="chip driver"];
+    }
+
+    libnfc	[shape=house];
+    PN532	[shape=invhouse];
+
+    {
+	edge [style=dotted];
+	PN53x -> UART;
+	UART-> PN532;
+	libnfc -> ACR122;
+	ACR122 -> PN532;
+	libnfc -> UART;
+	libnfc -> USB;
+	PN53x -> ACR122;
+    }
+
+    {
+	rank=same;
+	libnfc;
+	library;
+    }
+
+    {
+	rank=same;
+	ACR122;
+	USB;
+	UART;
+	devicedriver;
+    }
+
+    {
+	rank=same;
+	PN53x;
+	chipdriver;
+    }
+
+    {
+	rank=same
+	PN532;
+	chip;
+    }
+
+    // Send message
+    edge [color="#ada7c8"];
+    libnfc -> PN53x	[taillabel="1"];
+    PN53x -> USB	[taillabel="2"];
+    USB -> PN532	[taillabel="3"];
+
+    // Receive ACK/NACK
+    edge [color="#887da3"];
+    PN532 -> USB	[taillabel="4"];
+    USB -> PN53x	[taillabel="5.2.1", style=dashed]; // fail
+    PN53x -> libnfc	[taillabel="5.2.2", style=dashed];
+
+    // Receive response
+    edge [color="#625b81"];
+    PN532 -> USB	[taillabel="5.1"]; // ok
+    USB -> PN53x	[taillabel="6"];
+
+    // Send ACK
+    edge [color="#494066"]
+    USB -> PN532	[taillabel="7"];
+    PN53x -> libnfc	[taillabel="8"];
+
+    label="Current nfc_transceive() call path in libnfc.";
+}
