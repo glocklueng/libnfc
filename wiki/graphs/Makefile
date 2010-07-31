@@ -1,10 +1,12 @@
 
-all: libnfc-1.3.png libnfc-1.6.png
+PNG= libnfc-1.3.png libnfc-1.4.png libnfc-1.6.png
 
 .SUFFIXES: .dot .png
+
+all: ${PNG}
 
 .dot.png:
 	dot -Tpng:cairo $< > $@
 
 clean:
-	rm libnfc-1.3.png libnfc-1.6.png
+	rm -f ${PNG}

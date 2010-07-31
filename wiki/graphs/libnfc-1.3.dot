@@ -1,9 +1,9 @@
 digraph nfc_transceive {
     fontname="Bitstream Vera Sans";
-    fontsize=12;
+    fontsize=10;
 
     edge [fontname="Bitstream Vera Sans", fontsize=8];
-    node [fontname="Bitstream Vera Sans", fontsize=12];
+    node [fontname="Bitstream Vera Sans", fontsize=10];
 
     subgraph {
 	node [shape=plaintext];
@@ -62,8 +62,8 @@ digraph nfc_transceive {
     // Receive ACK/NACK
     edge [color="#887da3"];
     PN532 -> USB	[taillabel="4"];
-    USB -> PN53x	[taillabel="5.2.1", style=dashed]; // fail
-    PN53x -> libnfc	[taillabel="5.2.2", style=dashed];
+    USB -> PN53x	[taillabel="5.2.1", style=dashed, color="#df421e"]; // fail
+    PN53x -> libnfc	[taillabel="5.2.2", style=dashed, color="#df421e"];
 
     // Receive response
     edge [color="#625b81"];
@@ -75,5 +75,5 @@ digraph nfc_transceive {
     USB -> PN532	[taillabel="7"];
     PN53x -> libnfc	[taillabel="8"];
 
-    label="Current nfc_transceive() call path in libnfc.";
+    label="nfc_transceive() in libnfc-1.3.";
 }
