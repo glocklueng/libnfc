@@ -69,7 +69,24 @@ The focus for 1.6 is a better abstraction of NFC devices.  As of 1.3.x, we alrea
   1. return the command result
 </td></tr></table>
 
-The goal is to provide consistent and reusable interfaces, so that error management and recovery can be handled in as few places as possible.
+The goal is to provide consistent and reusable interfaces (API) that could be as follows:
+
+=== Drivers API ===
+  * driver_init
+  * driver_list_devices
+  * driver_connect
+  * driver_transceive
+  * driver_disconnect
+  * driver_free
+
+=== Interfaces API ===
+  * driver_interface_init
+  * driver_interface_list_device
+  * driver_interface_open
+  * driver_interface_read
+  * driver_interface_write
+  * driver_interface_close
+  * driver_interface_free
 
 ETA: TBD
 -----------
