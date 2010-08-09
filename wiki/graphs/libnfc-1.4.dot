@@ -7,18 +7,25 @@ digraph nfc_transceive {
 
     subgraph {
 	node [shape=plaintext];
-	library -> chipdriver -> devicedriver -> chip;
+	library -> chipdriver -> devicedriver -> busdriver -> chip;
 
 	devicedriver	[label="device driver"];
 	chipdriver	[label="chip driver"];
+	busdriver       [label="bus driver"]
     }
 
     libnfc	[shape=house];
+    PN531	[shape=invhouse];
     PN532	[shape=invhouse];
+    PN533	[shape=invhouse];
+
+    USB		[label="PN531_usb"];
 
     {
 	edge [style=dotted];
-	PN53x -> UART -> PN532;
+	PN53x -> PN532_uart -> UART -> PN532;
+	PN53x -> PN533_usb -> PN533;
+	PN53x -> arygon -> UART;
 	PN53x -> ACR122 -> PN532;
     }
 
@@ -32,7 +39,9 @@ digraph nfc_transceive {
 	rank=same;
 	ACR122;
 	USB;
-	UART;
+	PN532_uart;
+	PN533_usb;
+	arygon;
 	devicedriver;
     }
 
@@ -43,8 +52,15 @@ digraph nfc_transceive {
     }
 
     {
+	UART;
+	busdriver;
+    }
+
+    {
 	rank=same
+	PN531;
 	PN532;
+	PN533;
 	chip;
     }
 
@@ -52,11 +68,11 @@ digraph nfc_transceive {
     edge [color="#ada7c8"];
     libnfc -> PN53x	[taillabel="1"];
     PN53x -> USB	[taillabel="2"];
-    USB -> PN532	[taillabel="3"];
+    USB -> PN531	[taillabel="3"];
 
     // Receive ACK/NACK
     edge [color="#887da3"];
-    PN532 -> USB	[taillabel="4"];
+    PN531 -> USB	[taillabel="4"];
     USB -> PN53x	[taillabel="5"];
     PN53x -> USB	[taillabel="6.2.1", style=dashed, color="#df421e"]; // fail
     USB -> PN53x	[taillabel="6.2.2", style=dashed, color="#df421e"]; // fail
@@ -65,13 +81,13 @@ digraph nfc_transceive {
     // Receive response
     edge [color="#625b81"];
     PN53x -> USB	[taillabel="6.1"]; // ok
-    PN532 -> USB	[taillabel="7"];
+    PN531 -> USB	[taillabel="7"];
     USB -> PN53x	[taillabel="8"];
 
     // Send ACK
     edge [color="#494066"]
     PN53x -> USB	[taillabel="9"];
-    USB -> PN532	[taillabel="10"];
+    USB -> PN531	[taillabel="10"];
     PN53x -> libnfc	[taillabel="11"];
 
     label="nfc_transceive() in libnfc-1.4.";
