@@ -80,13 +80,13 @@ The goal is to provide consistent and reusable interfaces (API) that could be as
   * driver_free
 
 === Interfaces API ===
-  * driver_interface_init
-  * driver_interface_list_device
-  * driver_interface_open
-  * driver_interface_read
-  * driver_interface_write
-  * driver_interface_close
-  * driver_interface_free
+  * interface_init
+  * interface_list_device
+  * interface_open
+  * interface_read
+  * interface_write
+  * interface_close
+  * interface_free
 
 ETA: TBD
 -----------
