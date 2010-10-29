@@ -31,7 +31,8 @@
 #  include <stdint.h>
 #  include <stdbool.h>
 
-#  ifdef _WIN32
+// Test if we are compiling with MS Visual C on Windows
+#  if defined (_WIN32) && (_MSC_VER)
   /* Windows platform */
 #    ifndef _WINDLL
     /* CMake compilation */
