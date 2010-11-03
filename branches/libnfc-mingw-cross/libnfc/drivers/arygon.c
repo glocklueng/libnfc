@@ -313,10 +313,9 @@ arygon_firmware (const nfc_device_spec_t nds, char * str)
   if ( 0 == memcmp (abtRx, arygon_error_none, 6)) {
     byte_t * p = abtRx + 6;
     unsigned int szData;
-    sscanf (p, "%02x%s", &szData, p);
+    sscanf ((const char*)p, "%02x%s", &szData, p);
     memcpy (str, p, szData);
-    p += szData;
-    *p = '\0';
+    *(str + szData) = '\0';
   }
 }
 
