@@ -24,13 +24,15 @@ WITH_POSIX_ONLY_EXAMPLES=1
 # Libtool
 AC_PROG_LIBTOOL
 case "$host" in
-   *-pc-linux-gnu)
-     AC_MSG_RESULT([Fixing libtool for -rpath problems.])
-     sed -i -r 's/(hardcode_into_libs)=.*$/\1=no/' libtool
-   ;;
-   *-pc-mingw32msvc)
-     WITH_POSIX_ONLY_EXAMPLES=0
-     AC_MSG_RESULT([Disable extended examples due to target Windows system.])
+  *-pc-linux-gnu)
+    AC_MSG_RESULT([Fixing libtool for -rpath problems.])
+    sed -i -r 's/(hardcode_into_libs)=.*$/\1=no/' libtool
+  ;;
+  *-pc-mingw32msvc)
+    WITH_POSIX_ONLY_EXAMPLES=0
+    AC_MSG_RESULT([Disable extended examples due to target Windows system.])
+    # Undefine __STRICT_ANSI__ to allow to use strdup, putenv, etc. without warnings
+    CFLAGS="$CFLAGS -U__STRICT_ANSI__"
    ;;
 esac
 AM_CONDITIONAL(POSIX_ONLY_EXAMPLES_ENABLED, [test "$WITH_POSIX_ONLY_EXAMPLES" = "1"])
