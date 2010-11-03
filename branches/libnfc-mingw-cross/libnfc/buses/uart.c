@@ -104,11 +104,13 @@ uart_open (const char *pcPortName)
 }
 
 // TODO Remove PN53x related timeout
-#define UART_TIMEOUT(X) ((X * 7) + 15000)     // where X is 1-byte duration (µs): X * 6+1 bytes (PN53x's ACK + 1 other chance) + 15 ms (PN532 Tmax to reply ACK)
+#define UART_TIMEOUT(X) ((X * 7) + 15000)		// where X is 1-byte duration (µs): X * 6+1 bytes (PN53x's ACK + 1 other chance) + 15 ms (PN532 Tmax to reply ACK)
+// UART_SPEED_T0_TIME(X) convert baud rate to interval between 2 bytes (in us)
+#define UART_SPEED_T0_TIME(X) ((1000000 * 9)/ X)	// 8,n,1 => 9 bits => data rate ~= bauds/9 (bytes/s); ex: 8N1@9600 ~= 1066 bytes/s
 void
 uart_set_speed (serial_port sp, const uint32_t uiPortSpeed)
 {
-  long int iTimeout = UART_TIMEOUT(uiPortSpeed/9); // 8,n,1 => 9bits => ~ bauds/9
+  long int iTimeout = UART_TIMEOUT(UART_SPEED_T0_TIME(uiPortSpeed)); 
   DBG ("Serial port speed requested to be set to %d bauds (%ld µs).", uiPortSpeed, iTimeout);
   const serial_port_unix *spu = (serial_port_unix *) sp;
 
@@ -377,7 +379,6 @@ uart_close (const serial_port sp)
 }
 
 // TODO Remove PN53x related timeout
-#define UART_TIMEOUT(X) (((X * 7) + 15000)/1000)     // where X is 1-byte duration (µs): X * 6+1 bytes (PN53x's ACK + 1 other chance) + 15 ms (PN532 Tmax to reply ACK)
 void
 uart_set_speed (serial_port sp, const uint32_t uiPortSpeed)
 {
@@ -401,19 +402,25 @@ uart_set_speed (serial_port sp, const uint32_t uiPortSpeed)
   spw = (serial_port_windows *) sp;
 
   // Set timeouts
-  spw->ct.ReadIntervalTimeout = UART_TIMEOUT(uiPortSpeed/9);
+  //printf ("UART_SPEED_T0_TIME (%d) = %d\n", uiPortSpeed, UART_SPEED_T0_TIME(uiPortSpeed));
+  spw->ct.ReadIntervalTimeout = 0;
   spw->ct.ReadTotalTimeoutMultiplier = 0;
   spw->ct.ReadTotalTimeoutConstant = 0;
   spw->ct.WriteTotalTimeoutMultiplier = 0;
   spw->ct.WriteTotalTimeoutConstant = 0;
 
-  SetCommTimeouts (spw->hPort, &spw->ct);
+  if (!SetCommTimeouts (spw->hPort, &spw->ct)) {
+    ERR ("Unable to apply new timeout settings.");
+    return;
+  }
 
   // Set baud rate
   spw->dcb.BaudRate = uiPortSpeed;
   if (!SetCommState (spw->hPort, &spw->dcb)) {
     ERR ("Unable to apply new speed settings.");
+    return;
   }
+  PurgeComm (spw->hPort, PURGE_RXABORT | PURGE_RXCLEAR);
 }
 
 uint32_t
