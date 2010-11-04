@@ -353,11 +353,11 @@ uart_open (const char *pcPortName)
     return INVALID_SERIAL_PORT;
   }
 
-  sp->ct.ReadIntervalTimeout = 0;
+  sp->ct.ReadIntervalTimeout = 30;
   sp->ct.ReadTotalTimeoutMultiplier = 0;
   sp->ct.ReadTotalTimeoutConstant = 30;
-  sp->ct.WriteTotalTimeoutMultiplier = 0;
-  sp->ct.WriteTotalTimeoutConstant = 30;
+  sp->ct.WriteTotalTimeoutMultiplier = 30;
+  sp->ct.WriteTotalTimeoutConstant = 0;
 
   if (!SetCommTimeouts (sp->hPort, &sp->ct)) {
     uart_close (sp);
@@ -403,10 +403,11 @@ uart_set_speed (serial_port sp, const uint32_t uiPortSpeed)
 
   // Set timeouts
   //printf ("UART_SPEED_T0_TIME (%d) = %d\n", uiPortSpeed, UART_SPEED_T0_TIME(uiPortSpeed));
-  spw->ct.ReadIntervalTimeout = 0;
+  int iTimeout = 200;
+  spw->ct.ReadIntervalTimeout = 2;
   spw->ct.ReadTotalTimeoutMultiplier = 0;
-  spw->ct.ReadTotalTimeoutConstant = 0;
-  spw->ct.WriteTotalTimeoutMultiplier = 0;
+  spw->ct.ReadTotalTimeoutConstant = iTimeout;
+  spw->ct.WriteTotalTimeoutMultiplier = iTimeout;
   spw->ct.WriteTotalTimeoutConstant = 0;
 
   if (!SetCommTimeouts (spw->hPort, &spw->ct)) {
@@ -436,7 +437,7 @@ uart_get_speed (const serial_port sp)
 int
 uart_receive (serial_port sp, byte_t * pbtRx, size_t * pszRx)
 {
-  if (!ReadFile (((serial_port_windows *) sp)->hPort, pbtRx, *pszRx, (LPDWORD) pszRx, NULL)) {
+  if (!ReadFile (((serial_port_windows *) sp)->hPort, pbtRx, (DWORD)(*pszRx), (LPDWORD) pszRx, NULL)) {
     return DEIO;
   }
   if (!*pszRx)

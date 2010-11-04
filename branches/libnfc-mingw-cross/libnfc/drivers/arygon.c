@@ -295,7 +295,7 @@ arygon_firmware (const nfc_device_spec_t nds, char * str)
 {
   const byte_t arygon_firmware_version_cmd[] = { DEV_ARYGON_PROTOCOL_ARYGON_ASCII, 'a', 'v' }; 
   byte_t abtRx[BUFFER_LENGTH];
-  size_t szRx;
+  size_t szRx = BUFFER_LENGTH;
   int res;
 
 #ifdef DEBUG
@@ -305,6 +305,7 @@ arygon_firmware (const nfc_device_spec_t nds, char * str)
 
   res = uart_receive ((serial_port) nds, abtRx, &szRx);
   if (res != 0) {
+    DBG ("Unable to retrieve ARYGON firmware version.");
     return;
   }
 #ifdef DEBUG
@@ -324,7 +325,7 @@ arygon_reset_tama (const nfc_device_spec_t nds)
 {
   const byte_t arygon_reset_tama_cmd[] = { DEV_ARYGON_PROTOCOL_ARYGON_ASCII, 'a', 'r' };
   byte_t abtRx[BUFFER_LENGTH];
-  size_t szRx;
+  size_t szRx = BUFFER_LENGTH;
   int res;
 
   // Sometimes the first byte we send is not well-transmited (ie. a previously sent data on a wrong baud rate can put some junk in buffer)
@@ -337,6 +338,7 @@ arygon_reset_tama (const nfc_device_spec_t nds)
   // or arygon_error_unknown_mode (ie. in case of the first byte was bad-transmitted)
   res = uart_receive ((serial_port) nds, abtRx, &szRx);
   if (res != 0) {
+    DBG ("No reply to 'reset TAMA' command.");
     return false;
   }
 #ifdef DEBUG
