@@ -1,0 +1,44 @@
+#summary Steps to release a new libnfc version.
+
+ * Bump version in files : 
+  * Autotools (configure.ac), 
+  * CMake (CMakeFiles.txt),
+  * and debian files (debian/changelog).
+ * Bump API version : "-version-info x:y:z" (libnfc/Makefile.am)
+http://www.gnu.org/software/libtool/manual/html_node/Updating-version-info.html
+ * Finalise human-readable changelog! (!ChangeLog)
+ * Report any important code changes (NEWS)
+ * SVN COMMIT!
+{{{
+export LIBNFC_RELEASE=1.4.2
+svn ci -m"Prepare $LIBNFC_RELEASE version"
+}}}
+ * Check tarball distribution:
+{{{
+cd /tmp
+svn co https://libnfc.googlecode.com/svn/trunk/
+cd trunk
+autoreconf -is
+./configure
+make distcheck
+cd ..
+rm -rf trunk/
+}}}
+ * SVN TAG
+{{{
+svn cp https://libnfc.googlecode.com/svn/trunk/ https://libnfc.googlecode.com/svn/tags/libnfc-$LIBNFC_RELEASE -m"TAG: libnfc-$LIBNFC_RELEASE"
+}}}
+ * Build tarball archive
+{{{
+cd /tmp
+svn co https://libnfc.googlecode.com/svn/tags/libnfc-$LIBNFC_RELEASE
+cd libnfc-$LIBNFC_RELEASE
+sh make_release.sh
+mv libnfc-$LIBNFC_RELEASE.tar.gz libnfc-doc-$LIBNFC_RELEASE.zip ../
+cd ..
+rm -rf libnfc-$LIBNFC_RELEASE/
+}}}
+ * Upload archives on http://code.google.com/p/libnfc/downloads/list
+ * Update !ChangeLog on http://www.libnfc.org/documentation/changelog
+ * Update API at http://www.libnfc.org/api/
+ * Announce on forum http://www.libnfc.org/community/post/959
