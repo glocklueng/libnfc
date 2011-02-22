@@ -1,4 +1,4 @@
-#summary Waht's cooking for the nex *libnfc* releases.
+#summary What's cooking for the next *libnfc* releases.
 #labels Phase-Design,Featured
 
 = libnfc-1.4 =
