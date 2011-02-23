@@ -41,4 +41,4 @@ rm -rf libnfc-$LIBNFC_RELEASE/
  * Upload archives on http://code.google.com/p/libnfc/downloads/list
  * Update !ChangeLog on http://www.libnfc.org/documentation/changelog
  * Update API at http://www.libnfc.org/api/
- * Announce on forum http://www.libnfc.org/community/post/959
+ * Announce on forum http://www.libnfc.org/community/forum/1/news-announcements/
