@@ -236,8 +236,8 @@ pn532_uart_transceive (nfc_device_t * pnd, const byte_t * pbtTx, const size_t sz
   memmove (abtRxBuf, abtRxBuf + sizeof (ack_frame), szRxBufLen);
 
   if (szRxBufLen == 0) {
-    szRxBufLen = RX_BUFFER_LEN;
     do {
+      szRxBufLen = RX_BUFFER_LEN;
       delay_ms (10);
       res = uart_receive ((serial_port) pnd->nds, abtRxBuf, &szRxBufLen);
     } while (res != 0);
