@@ -588,7 +588,6 @@ pn53x_InListPassiveTarget (nfc_device_t * pnd,
                            const byte_t * pbtInitiatorData, const size_t szInitiatorData,
                            byte_t * pbtTargetsData, size_t * pszTargetsData)
 {
-  size_t  szRx;
   byte_t  abtCmd[sizeof (pncmd_initiator_list_passive)];
   memcpy (abtCmd, pncmd_initiator_list_passive, sizeof (pncmd_initiator_list_passive));
 
@@ -635,7 +634,7 @@ pn53x_InListPassiveTarget (nfc_device_t * pnd,
     memcpy (abtCmd + 4, pbtInitiatorData, szInitiatorData);
 
   // Try to find a tag, call the tranceive callback function of the current device
-  szRx = PN53x_EXTENDED_FRAME_MAX_LEN;
+  size_t szRx = PN53x_EXTENDED_FRAME_MAX_LEN;
   if (pn53x_transceive (pnd, abtCmd, 4 + szInitiatorData, pbtTargetsData, &szRx)) {
     *pszTargetsData = szRx;
     return true;
@@ -974,7 +973,7 @@ pn53x_InJumpForDEP (nfc_device_t * pnd,
                     nfc_target_t * pnt)
 {
   byte_t  abtRx[PN53x_EXTENDED_FRAME_MAX_LEN];
-  size_t  szRx;
+  size_t  szRx = sizeof(abtRx);
   size_t  offset;
   byte_t  abtCmd[sizeof (pncmd_initiator_jump_for_dep)];
 
@@ -1355,7 +1354,7 @@ pn53x_TgInitAsTarget (nfc_device_t * pnd, pn53x_target_mode_t ptm,
                       byte_t * pbtRx, size_t * pszRx, byte_t * pbtModeByte)
 {
   byte_t  abtRx[PN53x_EXTENDED_FRAME_MAX_LEN];
-  size_t  szRx;
+  size_t  szRx = sizeof(abtRx);
   byte_t  abtCmd[39 + 47 + 48]; // Worst case: 39-byte base, 47 bytes max. for General Bytes, 48 bytes max. for Historical Bytes
   size_t  szOptionalBytes = 0;
 
@@ -1425,7 +1424,7 @@ bool
 pn53x_target_receive_bits (nfc_device_t * pnd, byte_t * pbtRx, size_t * pszRxBits, byte_t * pbtRxPar)
 {
   byte_t  abtRx[PN53x_EXTENDED_FRAME_MAX_LEN];
-  size_t  szRx;
+  size_t  szRx = sizeof(abtRx);
   size_t  szFrameBits;
   uint8_t ui8rcc;
   uint8_t ui8Bits;
@@ -1462,7 +1461,7 @@ pn53x_target_receive_bytes (nfc_device_t * pnd, byte_t * pbtRx, size_t * pszRx)
 {
   byte_t const *pbtTx;
   byte_t  abtRx[PN53x_EXTENDED_FRAME_MAX_LEN];
-  size_t  szRx;
+  size_t  szRx = sizeof(abtRx);
 
   if (pnd->bEasyFraming) {
     pbtTx = pncmd_target_get_data;
