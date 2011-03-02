@@ -35,7 +35,7 @@ typedef struct {
 
 // timeval struct that define timeout delay for serial port:
 //  first is constant and currently related to PN53x response delay
-static const unsigned long int uiTimeoutStatic = 15000; // 15 ms to allow device to respond
+static const unsigned long int uiTimeoutStatic = 20000; // 15 ms to allow device to respond + 5 ms (quick and -very- dirty hack: attempt to be more reliable)
 //  second is a per-byte timeout (sets when setting baudrate)
 static unsigned long int uiTimeoutPerByte = 0;
 
@@ -219,7 +219,7 @@ uart_receive (serial_port sp, byte_t * pbtRx, size_t * pszRx)
   DBG ("iExpectedByteCount == %d", iExpectedByteCount);
   struct timeval tvTimeout = {
     .tv_sec = 0,
-    .tv_usec = uiTimeoutStatic + (uiTimeoutPerByte * iExpectedByteCount),
+    .tv_usec = uiTimeoutStatic + (uiTimeoutPerByte * MIN(iExpectedByteCount, 16)),
   };
   struct timeval tv = tvTimeout;
 
