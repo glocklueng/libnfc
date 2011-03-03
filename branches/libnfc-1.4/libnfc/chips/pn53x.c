@@ -898,7 +898,7 @@ pn53x_configure (nfc_device_t * pnd, const nfc_device_option_t ndo, const bool b
     abtCmd[2] = RFCI_RETRY_SELECT;
     abtCmd[3] = (bEnable) ? 0xff : 0x00;        // MxRtyATR, default: active = 0xff, passive = 0x02
     abtCmd[4] = (bEnable) ? 0xff : 0x00;        // MxRtyPSL, default: 0x01
-    abtCmd[5] = (bEnable) ? 0xff : 0x00;        // MxRtyPassiveActivation, default: 0xff
+    abtCmd[5] = (bEnable) ? 0xff : 0x01;        // MxRtyPassiveActivation, default: 0xff (0x00 leads to problems with PN531)
     if (!pn53x_transceive (pnd, abtCmd, 6, NULL, NULL))
       return false;
     break;
