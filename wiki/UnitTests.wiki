@@ -1,0 +1,23 @@
+#summary Unit tests depending on features and devices
+
+= Introduction =
+
+Add your content here.
+
+= Tests =
+
+== D.E.P. ==
+
+=== Passive Mode ===
+|| _Target_ \ *Initiator* || *SCL3711* || *StickID* || *ACR122* || *LoGO* ||
+|| _SCL3711_ || 106/212/424 || --- || --- || --- ||
+|| _StickID_ || --- || --- || --- || --- ||
+|| _ACR122_ || --- || --- || --- || --- ||
+|| _LoGO_ || --- || --- || --- || --- ||
+
+=== Active Mode ===
+|| _Target_ \ *Initiator* || *SCL3711* || *StickID* || *ACR122* || *LoGO* ||
+|| _SCL3711_ || --- || --- || --- || --- ||
+|| _StickID_ || --- || 106, ~~212~~ || --- || --- ||
+|| _ACR122_ || --- || --- || --- || --- ||
+|| _LoGO_ || --- || --- || --- || --- ||
